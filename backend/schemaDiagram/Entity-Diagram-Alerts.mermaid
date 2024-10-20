@@ -1,0 +1,54 @@
+erDiagram
+    Users ||--o| Doctors : has
+    Users ||--o| Patients : has
+    Doctors ||--o{ Patients : monitors
+    Patients ||--o{ HealthRecords : has
+    HealthRecords ||--o{ Alerts : triggers
+    Doctors ||--o{ Alerts : receives
+    Doctors ||--o{ Thresholds : sets
+
+    Users {
+        int id PK
+        string username
+        string email
+        string password
+        string role
+    }
+
+    Doctors {
+        int id PK
+        int userId FK
+        string specialization
+    }
+
+    Patients {
+        int id PK
+        int userId FK
+        int doctorId FK
+    }
+
+    HealthRecords {
+        int id PK
+        int patientId FK
+        float heartRate
+        float bloodPressure
+        float temperature
+        datetime timestamp
+    }
+
+    Thresholds {
+        int id PK
+        int doctorId FK
+        string metricName
+        float minValue
+        float maxValue
+    }
+
+    Alerts {
+        int id PK
+        int healthRecordId FK
+        int doctorId FK
+        string message
+        datetime timestamp
+        boolean isRead
+    }

@@ -1,47 +1,24 @@
-const express = require("express");
+// server.js
+
+const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
-const { buildSchema } = require('graphql')
-
+const dotenv = require('dotenv').config();
+const userSchema = require('./schema/userSchema'); 
+const userResolvers = require('./resolvers/userResolvers');
 
 const app = express();
+app.use(bodyParser.json());
+const PORT = process.env.PORT || 3000;
 
-// Parse the data with JSON
-
-app.use(bodyParser.json())
-
-// Setup endpoint for the graphQl
-
+// Setup endpoint for GraphQL
 app.use('/graphql', graphqlHTTP({
-    schema: buildSchema(
-        `
-        type RootQuery {
-            events: [String!]!
-        }
+    schema: userSchema,
+    rootValue: userResolvers,
+    graphiql: true,
+}));
 
-        type RootMutation {
-            createEvent(name: String): String
-        }
-
-        schema {
-            query: RootQuery,
-            mutation: RootMutation
-        }
-        `
-    ),
-    rootValue: {
-        events: () => {
-            return ["Romantic", "Sailing", "All Night"]
-        },
-
-        createEvent: (args) => {
-            const eventName = args.name
-            return eventName
-        }
-    },
-    graphiql:  true
-}))
-
-
-// Listening port of the app
-app.listen(3200);
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}/graphql`);
+});
