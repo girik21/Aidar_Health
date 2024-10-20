@@ -1,32 +1,24 @@
-const express = require("express");
+// server.js
+
+const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
-const { buildSchema } = require('graphql')
 const dotenv = require('dotenv').config();
-const schema = require('./schema/schema')
-const resolvers = require('./resolvers/resolvers')
-
-
-// Initialize Express & Port & data with JSON
+const userSchema = require('./schema/userSchema'); 
+const userResolvers = require('./resolvers/userResolvers');
 
 const app = express();
 app.use(bodyParser.json());
+const PORT = process.env.PORT || 3000;
 
-const PORT = process.env.PORT || 3200;
-
-
-// Setup endpoint for the graphQl
-
-app.use('/graphql', graphqlHTTP((req) => ({
-    schema: schema,
-    rootValue: resolvers,
+// Setup endpoint for GraphQL
+app.use('/graphql', graphqlHTTP({
+    schema: userSchema,
+    rootValue: userResolvers,
     graphiql: true,
-}))
-);
+}));
 
-
-// Listening port of the app
-
-app.listen((PORT), () => {
-    console.log(`Server is running on http://localhost:${PORT}/graphql`);
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}/graphql`);
 });

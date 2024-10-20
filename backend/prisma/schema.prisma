@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum for user roles
+enum Roles {
+  ADMIN       // Administrator role
+  DOCTOR      // Doctor role
+  PATIENT     // Patient role
+  UNASSIGNED  // Role not assigned
+}
+
+// User model representing the user table
+model User {
+  id        Int      @id @default(autoincrement()) // Unique identifier for the user
+  username  String   @unique                       // Unique username for the user
+  email     String   @unique                       // Unique email for the user
+  password  String                                 // Hashed password for the user
+  roles     Roles   @default(UNASSIGNED)           // User's role from the defined enum
+}
