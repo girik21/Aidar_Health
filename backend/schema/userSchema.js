@@ -1,7 +1,6 @@
-const { buildSchema } = require('graphql');
+const { gql } = require('apollo-server-express');
 
-const userSchema = buildSchema(`
-
+const userSchema = gql`
     enum Roles {
         ADMIN
         DOCTOR
@@ -14,7 +13,7 @@ const userSchema = buildSchema(`
         username: String!
         email: String!
         password: String!
-        role: Roles
+        roles: Roles
     }
 
     input UserInput {
@@ -23,13 +22,19 @@ const userSchema = buildSchema(`
         password: String!
     }
 
+    input AssignRoleInput {
+        userId: ID!
+        role: Roles!
+    }
+
     type Query {
         getAllUsers: [User!]!
     }
 
     type Mutation {
         createUser(userInput: UserInput!): User!
+        assignRole(assignRoleInput: AssignRoleInput): User!
     }
-`);
+`;
 
 module.exports = userSchema;
