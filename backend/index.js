@@ -1,24 +1,29 @@
-// server.js
-
 const express = require('express');
-const bodyParser = require('body-parser');
-const { graphqlHTTP } = require('express-graphql');
+const { ApolloServer } = require('apollo-server-express');
 const dotenv = require('dotenv').config();
-const userSchema = require('./schema/userSchema'); 
-const userResolvers = require('./resolvers/userResolvers');
+
+const typeDefs = require('./schema/index'); // combined schemas
+const resolvers = require('./resolvers/index'); // combined resolvers
 
 const app = express();
-app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
 
-// Setup endpoint for GraphQL
-app.use('/graphql', graphqlHTTP({
-    schema: userSchema,
-    rootValue: userResolvers,
-    graphiql: true,
-}));
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}/graphql`);
+// Create Apollo Server instance
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req }) => {
+        // Context can to be used for authentication here, etc.
+        return { user: req.user };
+    },
+});
+
+// Apply Apollo middleware to Express app
+server.start().then(res => {
+    server.applyMiddleware({ app });
+
+    app.listen(PORT, () => {
+        console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+    });
 });
