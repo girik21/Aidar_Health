@@ -8,20 +8,43 @@ datasource db {
 }
 
 // Enum for user roles
+
 enum Roles {
-  ADMIN       // Administrator role
-  DOCTOR      // Doctor role
-  PATIENT     // Patient role
-  UNASSIGNED  // Role not assigned
+  ADMIN   // Administrator role
+  DOCTOR  // Doctor role
+  PATIENT // Patient role
+  UNASSIGNED //UNASSIGNED role
 }
 
 // User model representing the user table
+
 model User {
   id        Int      @id @default(autoincrement()) // Unique identifier for the user
   username  String   @unique                       // Unique username for the user
   email     String   @unique                       // Unique email for the user
   password  String                                 // Hashed password for the user
-  roles     Roles   @default(UNASSIGNED)           // User's role from the defined enum
+  roles      Roles   @default(UNASSIGNED)          // User's role from the defined enum
+  doctor    Doctor?  @relation                     // Optional relation to Doctor
+  patient   Patient? @relation                     // Optional relation to Patient
 }
 
-// Doctor model reprenting the doctor table
+// Doctor model representing the doctor table
+
+model Doctor {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique // Link to User model
+  specialty String   // Doctor's specialty
+  user      User     @relation(fields: [userId], references: [id]) // Relation to User
+  patients  Patient[] @relation // A doctor can have many patients
+}
+
+// Patient model representing the patient table
+
+model Patient {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @unique // Link to User model
+  medicalHistory  String
+  doctorId        Int      // Foreign key for the doctor
+  doctor          Doctor   @relation(fields: [doctorId], references: [id]) // Relation to Doctor
+  user            User     @relation(fields: [userId], references: [id]) // Relation to User
+}
