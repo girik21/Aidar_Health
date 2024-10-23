@@ -1,6 +1,6 @@
 export default function Login() {
   return (
-    <div className="bg-formShade shadow-lg rounded-xl p-8">
+    <div className="bg-white shadow-lg rounded-xl p-8">
       <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
       <form className="space-y-4">
         <div>
@@ -11,7 +11,7 @@ export default function Login() {
             type="email"
             id="email"
             name="email"
-            className="mt-1 block w-full rounded-md border-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-2 py-2"
+            className="mt-1 block w-full rounded-md border-black-200 border bg-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-2 py-2 "
           />
         </div>
         <div>
@@ -22,13 +22,13 @@ export default function Login() {
             type="password"
             id="password"
             name="password"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-2 py-2"
+            className="mt-1 block w-full rounded-md border-black-200 border bg-gray-100 shadow-sm  focus:border-blue-500 focus:ring-blue-500 px-2 py-2"
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-violet-600 hover:bg-violet-800 text-white py-2 px-4 rounded-2xl text-xl font-bold"
-        >
+          className="w-full bg-customPink hover:bg-red-400 text-black font-extrabold py-2 px-4 rounded-md"
+          >
           Login
         </button>
       </form>
