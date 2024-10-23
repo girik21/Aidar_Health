@@ -7,6 +7,8 @@ const doctorSchema = gql`
         specialty: String!
         user: User!
         patients: [Patient!]!
+        thresholds: [PatientThreshold!]!
+        alerts: [Alert!]!
     }
 
     input DoctorInput {

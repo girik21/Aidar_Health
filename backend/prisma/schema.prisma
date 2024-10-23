@@ -1,50 +1,110 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client-js" // Generates Prisma Client for use in the application
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "postgresql" // Database provider, in this case PostgreSQL
+  url      = env("DATABASE_URL") // URL for database connection
 }
 
 // Enum for user roles
-
 enum Roles {
-  ADMIN   // Administrator role
-  DOCTOR  // Doctor role
-  PATIENT // Patient role
-  UNASSIGNED //UNASSIGNED role
+  ADMIN        // Administrator role
+  DOCTOR       // Doctor role
+  PATIENT      // Patient role
+  UNASSIGNED   // Default role before assignment
 }
 
-// User model representing the user table
+// Enum for different types of health metrics
+enum MetricType {
+  HEART_RATE                // Heart rate metric
+  BLOOD_PRESSURE_SYSTOLIC    // Systolic blood pressure
+  BLOOD_PRESSURE_DIASTOLIC   // Diastolic blood pressure
+  TEMPERATURE                // Body temperature
+  OXYGEN_SATURATION          // Oxygen saturation level
+}
 
+// User model representing any user in the system (Doctor, Patient, Admin)
 model User {
-  id        Int      @id @default(autoincrement()) // Unique identifier for the user
-  username  String   @unique                       // Unique username for the user
-  email     String   @unique                       // Unique email for the user
-  password  String                                 // Hashed password for the user
-  roles      Roles   @default(UNASSIGNED)          // User's role from the defined enum
-  doctor    Doctor?  @relation                     // Optional relation to Doctor
-  patient   Patient? @relation                     // Optional relation to Patient
+  id        Int      @id @default(autoincrement()) // Unique identifier for each user
+  username  String   @unique                       // Unique username for login
+  email     String   @unique                       // Unique email for login
+  password  String                                 // Hashed password
+  roles     Roles    @default(UNASSIGNED)          // Role of the user (Doctor, Patient, Admin)
+  doctor    Doctor?  @relation                     // Optional relation to Doctor model
+  patient   Patient? @relation                     // Optional relation to Patient model
 }
 
-// Doctor model representing the doctor table
-
+// Doctor model representing doctors in the system
 model Doctor {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique // Link to User model
-  specialty String   // Doctor's specialty
-  user      User     @relation(fields: [userId], references: [id]) // Relation to User
-  patients  Patient[] @relation // A doctor can have many patients
+  id          Int      @id @default(autoincrement()) // Unique identifier for doctor
+  userId      Int      @unique                      // User ID linked to the doctor
+  specialty   String                                // Doctor's specialty (e.g., Cardiologist)
+  user        User     @relation(fields: [userId], references: [id]) // Relation to User model
+  patients    Patient[] @relation                   // Doctor can have many patients
+  thresholds  Threshold[]                           // Thresholds set by the doctor for different metrics
+  alerts      Alert[]                               // Alerts related to the doctor's patients
 }
 
-// Patient model representing the patient table
-
+// Patient model representing patients in the system
 model Patient {
-  id              Int      @id @default(autoincrement())
-  userId          Int      @unique // Link to User model
-  medicalHistory  String
-  doctorId        Int      // Foreign key for the doctor
-  doctor          Doctor   @relation(fields: [doctorId], references: [id]) // Relation to Doctor
-  user            User     @relation(fields: [userId], references: [id]) // Relation to User
+  id              Int      @id @default(autoincrement()) // Unique identifier for patient
+  userId          Int      @unique                      // User ID linked to the patient
+  medicalHistory  String                                 // Patient's medical history
+  doctorId        Int                                    // Doctor ID (linked to the patient's doctor)
+  doctor          Doctor   @relation(fields: [doctorId], references: [id]) // Relation to Doctor model
+  user            User     @relation(fields: [userId], references: [id]) // Relation to User model
+  healthRecords   HealthRecord[]                         // Health records associated with the patient
+  thresholds      PatientThreshold[]                     // Custom thresholds for each metric for this patient
+}
+
+// HealthRecord model for storing health measurements
+model HealthRecord {
+  id                    Int      @id @default(autoincrement()) // Unique identifier for each health record
+  patientId             Int                                    // Patient ID linked to this health record
+  heartRate             Float?                                 // Heart rate value
+  bloodPressureSystolic Float?                                 // Systolic blood pressure value
+  bloodPressureDiastolic Float?                                // Diastolic blood pressure value
+  temperature           Float?                                 // Body temperature value
+  oxygenSaturation      Float?                                 // Oxygen saturation value
+  timestamp             DateTime @default(now())               // Timestamp of when the record was taken
+  patient               Patient  @relation(fields: [patientId], references: [id]) // Relation to Patient
+  alerts                Alert[]                                // Alerts generated from this health record
+}
+
+// Threshold model for doctors to set thresholds for different health metrics
+model Threshold {
+  id         Int      @id @default(autoincrement()) // Unique identifier for the threshold
+  doctorId   Int                                   // Doctor ID linked to the threshold
+  metricName MetricType                            // The health metric for this threshold (e.g., HEART_RATE)
+  minValue   Float                                 // Minimum threshold value for the metric
+  maxValue   Float                                 // Maximum threshold value for the metric
+  doctor     Doctor   @relation(fields: [doctorId], references: [id]) // Relation to Doctor model
+}
+
+// PatientThreshold model for patients to have custom thresholds for health metrics
+model PatientThreshold {
+  id            Int        @id @default(autoincrement()) // Unique identifier for each threshold
+  patientId     Int                                   // Patient ID linked to this threshold
+  metricType    MetricType                            // The type of health metric (e.g., HEART_RATE)
+  minValue      Float                                // Minimum threshold value for the metric
+  maxValue      Float                                // Maximum threshold value for the metric
+  updatedAt     DateTime  @default(now())             // Timestamp of when the threshold was last updated
+  notes         String?                              // Optional notes explaining the threshold
+  patient       Patient   @relation(fields: [patientId], references: [id]) // Relation to Patient model
+  
+  @@unique([patientId, metricType])                  // Ensures one threshold per metric type per patient
+}
+
+// Alert model for alerts triggered when a health metric crosses a threshold
+model Alert {
+  id              Int      @id @default(autoincrement()) // Unique identifier for each alert
+  healthRecordId  Int                                   // Health record ID linked to the alert
+  doctorId        Int                                   // Doctor ID linked to the alert
+  message         String                                // Alert message
+  timestamp       DateTime @default(now())              // Timestamp when the alert was generated
+  isRead          Boolean  @default(false)              // Whether the alert has been read by the doctor
+  severity        String   // e.g., "LOW", "MEDIUM", "HIGH" // Severity level of the alert
+  healthRecord    HealthRecord @relation(fields: [healthRecordId], references: [id]) // Relation to HealthRecord model
+  doctor          Doctor      @relation(fields: [doctorId], references: [id]) // Relation to Doctor model
 }
