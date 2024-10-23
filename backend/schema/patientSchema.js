@@ -8,6 +8,8 @@ const patientSchema = gql`
         doctorId: Int!
         user: User!
         doctor: Doctor!
+        healthRecords: [HealthRecord!]!
+        thresholds: [PatientThreshold!]!
     }
 
     input PatientInput {
