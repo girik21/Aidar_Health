@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../assets/aidar_logo.png';
 
 interface LayoutProps {
@@ -7,8 +7,15 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
     const location = useLocation();
+    const navigate = useNavigate();
     const isAuthPage = ['/login', '/signup'].includes(location.pathname);
     const isLandingPage = location.pathname === '/';
+    const isAuthenticated = !!localStorage.getItem('token'); // Check if token exists
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/')
+    }
 
     return (
         <div className="min-h-screen bg-customPink">
@@ -18,31 +25,43 @@ export default function Layout({ children }: LayoutProps) {
                         <div className="flex">
                             <div className="flex-shrink-0 flex items-center">
                                 <Link to="/">
-                                    <img 
-                                        src={logo} 
-                                        alt="aidar logo" 
+                                    <img
+                                        src={logo}
+                                        alt="aidar logo"
                                         className="h-8 w-auto sm:h-10 object-contain"
                                     />
                                 </Link>
                             </div>
                         </div>
-                        
+
                         {/* Show auth buttons only on landing page */}
                         {isLandingPage && (
                             <button className="flex items-center space-x-4">
-                                <Link 
+                                <Link
                                     to="/login"
-                                    className="text-white hover:text-gray-300 px-4 py-2 rounded-3xl font-bold bg-loginShade text-xl"
+                                    className="text-red-400 hover:text-white px-4 py-2 rounded-3xl font-bold bg-loginShade text-xl"
                                 >
                                     Login
                                 </Link>
-                                <Link 
+                                <Link
                                     to="/signup"
-                                    className="text-white hover:text-gray-300 px-4 py-2 rounded-3xl font-bold bg-loginShade text-xl"
+                                    className="text-black hover:text-white px-4 py-2 rounded-3xl font-bold bg-yellow-500 text-xl"
                                 >
                                     Sign Up
                                 </Link>
                             </button>
+                        )}
+
+                        {isAuthenticated && (
+                            <div className="flex items-center space-x-4">
+                                <button
+                                    onClick={handleLogout}
+                                    className="text-red-400 hover:text-white px-4 py-2 rounded-3xl font-bold bg-loginShade text-xl"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+
                         )}
                     </div>
                 </div>
