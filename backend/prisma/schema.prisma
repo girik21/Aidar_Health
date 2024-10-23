@@ -30,7 +30,7 @@ model User {
   username  String   @unique                       // Unique username for login
   email     String   @unique                       // Unique email for login
   password  String                                 // Hashed password
-  roles     Roles    @default(UNASSIGNED)          // Role of the user (Doctor, Patient, Admin)
+  roles     Roles    @default(PATIENT)             // Role of the user (Doctor, Patient, Admin)
   doctor    Doctor?  @relation                     // Optional relation to Doctor model
   patient   Patient? @relation                     // Optional relation to Patient model
 }
