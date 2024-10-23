@@ -7,7 +7,13 @@ const userResolvers = {
     Query: {
         getAllUsers: async () => {
             try {
-                const users = await prisma.user.findMany();
+                const users = await prisma.user.findMany({
+                    select: {
+                        id: true,
+                        username: true,
+                        email: true,
+                    },
+                });
                 return users;
             } catch (error) {
                 throw new Error('Error fetching users: ' + error.message);

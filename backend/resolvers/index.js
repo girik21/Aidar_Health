@@ -5,6 +5,7 @@ const patientResolvers = require('./patientResolvers');
 const healthRecordResolvers = require('./healthRecordResolvers');
 const patientThresholdResolvers = require('./thresholdResolvers');
 const alertResolvers = require('./alertResolvers');
+const authResolvers = require('../auth/authResolvers')
 
 const resolvers = mergeResolvers([
     userResolvers,
@@ -13,6 +14,7 @@ const resolvers = mergeResolvers([
     healthRecordResolvers,
     patientThresholdResolvers,
     alertResolvers,
+    authResolvers
 ]);
 
 module.exports = resolvers;

@@ -12,7 +12,6 @@ const userSchema = gql`
         id: ID!
         username: String!
         email: String!
-        password: String!
         roles: Roles
         doctor: Doctor
         patient: Patient

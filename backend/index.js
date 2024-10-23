@@ -1,6 +1,7 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const dotenv = require('dotenv').config();
+const { verifyToken } = require('./auth/auth')
 
 const typeDefs = require('./schema/index'); // combined schemas
 const resolvers = require('./resolvers/index'); // combined resolvers
@@ -14,8 +15,18 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     context: ({ req }) => {
-        // Context can to be used for authentication here, etc.
-        return { user: req.user };
+        const token = req.headers.authorization || '';
+        let user = null;
+
+        if (token) {
+            try {
+                user = verifyToken(token);
+            } catch (err) {
+                console.error("Token verification error:", err);
+            }
+        }
+
+        return { user }; // Include user info in context
     },
 });
 
