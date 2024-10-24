@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PatientAlert from '../components/PatientAlert/PatientAlert';
 import PatientCarousel from '../components/PatientCarousel/PatientCarousel';
-import Sidebar from '../components/Sidebar/Sidebar';
 import LoadingSpinner from '../components/Spinner/LoadingSpinner';
 import { GET_CURRENT_DOCTOR, GET_DOCTOR } from '../graphql/queries';
 
@@ -42,7 +41,7 @@ export default function Dashboard() {
         if (doctorData) {
             console.log("Doctor Data:", doctorData.currentDoctor);
             if (doctorData.currentDoctor) {
-                setDoctorId(Number(doctorData.currentDoctor.id)); // Ensure id is a number
+                setDoctorId(Number(doctorData.currentDoctor.id));
             }
         }
 
@@ -88,12 +87,8 @@ export default function Dashboard() {
     ];
 
     return (
-        <div className="flex h-screen bg-white rounded-3xl shadow-lg shadow-gray-400">
+        <div className="flex h-screen bg-white rounded-3xl">
 
-            {/* Sidebar */}
-            <Sidebar doctor={data?.doctor} />
-
-            {/* Main Content */}
             <main className="flex-1 p-6">
 
                 {/* Active Patient Alerts */}
