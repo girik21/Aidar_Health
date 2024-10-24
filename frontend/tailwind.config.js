@@ -9,7 +9,8 @@ export default {
       colors: {
         customPink: '#f1dbd8',
         loginShade: '#4f233a',
-        formShade: '#f9e8f9'
+        formShade: '#f9e8f9',
+        dashGreen: '#ebddfc'
       },
     },
   },
