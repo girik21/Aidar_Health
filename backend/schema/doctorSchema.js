@@ -19,6 +19,7 @@ const doctorSchema = gql`
     extend type Query {
         doctor(id: Int!): Doctor
         doctors: [Doctor!]!
+        currentDoctor(userId: Int!): Doctor
     }
 
     extend type Mutation {

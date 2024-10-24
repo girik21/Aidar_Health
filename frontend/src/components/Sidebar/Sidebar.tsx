@@ -1,6 +1,20 @@
 import { useState } from 'react';
 
-const Sidebar = () => {
+interface Doctor {
+  id: string;
+  userId: number;
+  specialty: string;
+  user: {
+    username: string;
+    email: string;
+  };
+}
+
+interface SidebarProps {
+  doctor: Doctor | null; // Define the type for the doctor prop
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ doctor }) => {
   const [activePage, setActivePage] = useState('Dashboard');
   
   const menuItems = [
@@ -9,12 +23,6 @@ const Sidebar = () => {
     { name: 'Alerts', icon: '🔔' },
     { name: 'Records', icon: '✉️' },
   ];
-
-  const doctorInfo = {
-    name: 'Dr. Sarah Johnson',
-    specialty: 'Cardiologist',
-    status: 'Online'
-  };
 
   return (
     <aside className="w-64 h-screen bg-gradient-to-b from-pink-800 to-pink-300 p-6 flex flex-col rounded-3xl">
@@ -25,12 +33,8 @@ const Sidebar = () => {
             <span className="text-2xl">👩‍⚕️</span>
           </div>
         </div>
-        <h2 className="text-white font-bold text-lg">{doctorInfo.name}</h2>
-        <p className="text-blue-100 text-sm">{doctorInfo.specialty}</p>
-        <div className="flex items-center justify-center mt-2">
-          <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-          <span className="text-blue-100 text-sm">{doctorInfo.status}</span>
-        </div>
+        <h2 className="text-white font-bold text-lg">{doctor?.user.username || 'Doctor Name'}</h2>
+        <p className="text-blue-100 text-sm">{doctor?.specialty || 'Specialty'}</p>
       </div>
 
       {/* Navigation Menu */}

@@ -14,6 +14,12 @@ const doctorResolvers = {
                 include: { user: true, patients: true },
             });
         },
+        currentDoctor: async (_, { userId }) => {
+            return await prisma.doctor.findUnique({
+                where: { userId: parseInt(userId) },
+                include: { user: true, patients: true },
+            });
+        },
     },
 
     Mutation: {

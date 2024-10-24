@@ -21,11 +21,11 @@ export default function LoadingSpinner({
     };
 
     return (
-        <div className={`bg-red-300 bg-opacity-10 rounded-lg p-6 ${containerSizeClasses[size]}`}>
+        <div className={` bg-opacity-10 rounded-lg p-10 ${containerSizeClasses[size]}`}>
             <div className="flex flex-col items-center justify-center h-full gap-3">
                 {/* Spinner */}
                 <div className="relative">
-                    <div className={`${sizeClasses[size]} border-4 border-red-200 border-t-red-500 rounded-full animate-spin`} />
+                    <div className={`${sizeClasses[size]} border-4 border-white border-t-red-500 rounded-full animate-spin`} />
                     <div className={`absolute top-1/2 left-1/2 -translate-x-1 -translate-y-1 w-2 h-2 bg-red-500 rounded-full`} />
                 </div>
                 
