@@ -10,7 +10,7 @@ interface PatientAlertProps {
 
 export default function PatientAlert({ criticalPatients }: PatientAlertProps) {
     return (
-        <div className="max-w-4xl p-4 bg-dashGreen rounded-xl cursor-pointer">
+        <div className="max-w-4xl p-4 bg-dashGreen rounded-xl">
             {/* Header */}
             <div className="flex items-center gap-2 mb-6">
                 {/* Activity Icon */}
@@ -25,7 +25,7 @@ export default function PatientAlert({ criticalPatients }: PatientAlertProps) {
                 {criticalPatients.map((patient, index) => (
                     <div 
                         key={index}
-                        className="bg-white  border-l-red-500 border-l-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 p-6 flex flex-row"
+                        className="bg-white  border-l-red-500 border-l-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 p-6 flex flex-row cursor-pointer"
                     >
                         <div>
                             <img 
