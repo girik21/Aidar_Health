@@ -1,40 +1,63 @@
-const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
-const dotenv = require('dotenv').config();
-const { verifyToken } = require('./auth/auth')
+const { WebSocketServer } = require('ws');
+const { useServer } = require('graphql-ws/lib/use/ws');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
+const { PubSub } = require('graphql-subscriptions');
+const express = require('express');
+const http = require('http');
+const { verifyToken } = require('./auth/auth');
+const typeDefs = require('./schema/index');
+const resolvers = require('./resolvers/index');
 
-const typeDefs = require('./schema/index'); // combined schemas
-const resolvers = require('./resolvers/index'); // combined resolvers
+
+const PORT = process.env.PORT || 3000;
+const pubsub = new PubSub(); // To publish and subscribe to events
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
+// Create the schema for ApolloServer
+const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-// Create Apollo Server instance
+// Create HTTP server to handle both HTTP and WebSocket connections
+const httpServer = http.createServer(app);
+
+// Set up Apollo Server with subscriptions
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: ({ req }) => {
-        const token = req.headers.authorization || '';
-        let user = null;
+  schema,
+  context: ({ req }) => {
+    const token = req.headers.authorization || '';
+    let user = null;
 
-        if (token) {
-            try {
-                user = verifyToken(token);
-            } catch (err) {
-                console.error("Token verification error:", err);
-            }
-        }
-
-        return { user }; // Include user info in context
-    },
+    if (token) {
+      try {
+        user = verifyToken(token);
+      } catch (err) {
+        console.error("Token verification error:", err);
+      }
+    }
+    return { user, pubsub }; // Pass pubsub to the context
+  },
 });
 
-// Apply Apollo middleware to Express app
-server.start().then(res => {
-    server.applyMiddleware({ app });
+// Start Apollo server
+async function startServer() {
+  await server.start();
+  server.applyMiddleware({ app });
 
-    app.listen(PORT, () => {
-        console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
-    });
+  // Set up WebSocket Server for GraphQL Subscriptions
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: '/graphql',
+  });
+
+  useServer({ schema }, wsServer);
+
+  // Start the HTTP server with WebSocket support
+  httpServer.listen(PORT, () => {
+    console.log(`Server is now running on http://localhost:${PORT}${server.graphqlPath}`);
+  });
+}
+
+startServer().catch(err => {
+  console.error("Error starting the server:", err);
 });

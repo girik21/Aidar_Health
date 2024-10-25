@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server-express');
 
 const alertSchema = gql`
+    scalar DateTime
+
     type Alert {
         id: ID!
         healthRecordId: Int!
@@ -23,6 +25,10 @@ const alertSchema = gql`
     extend type Query {
         alert(id: Int!): Alert
         alerts: [Alert!]!
+    }
+
+    type Subscription {
+        alertCreated: Alert!
     }
 
     extend type Mutation {
