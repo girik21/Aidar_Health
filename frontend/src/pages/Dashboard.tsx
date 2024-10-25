@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import alertSound from '../assets/alert.wav';
 import PatientAlert from '../components/PatientAlert/PatientAlert';
 import PatientCarousel from '../components/PatientCarousel/PatientCarousel';
 import LoadingSpinner from '../components/Spinner/LoadingSpinner';
@@ -13,6 +14,13 @@ export default function Dashboard() {
     const [userId, setUserId] = useState<number | null>(null);
     const [doctorId, setDoctorId] = useState<number | null>(null);  
     const [alerts, setAlerts] = useState<Alert[]>([]);
+    const previousAlertsLength = useRef<number>(0);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    // Initialize audio element
+    useEffect(() => {
+        audioRef.current = new Audio(alertSound);
+    }, []);
 
     // Fetch alerts with polling
     const { data: alertData, loading: alertLoading, error: alertError, refetch: refetchAlerts } = useQuery<AlertsData>(GET_CRITICAL_ALERTS, {
@@ -20,7 +28,7 @@ export default function Dashboard() {
     });
 
     const handleAlertResolved = () => {
-        refetchAlerts();  // Refetch alerts when one is resolved
+        refetchAlerts();
     };
 
     // Query to get the doctor based on userId
@@ -39,13 +47,29 @@ export default function Dashboard() {
     useEffect(() => {
         const pollInterval = setInterval(() => {
             refetchAlerts();
-        }, 1000); // half a minute in milliseconds
+        }, 1000);
 
-        // Cleanup on component unmount
         return () => clearInterval(pollInterval);
     }, [refetchAlerts]);
 
-    // Use effect for token validation and setting userId
+    // Update alerts state and play sound when alertData changes
+    useEffect(() => {
+        if (alertData) {
+            const unreadAlerts = alertData.alerts.filter(alert => !alert.isRead);
+            
+            // Play sound if there are more unread alerts than before
+            if (unreadAlerts.length > previousAlertsLength.current && audioRef.current) {
+                audioRef.current.play().catch(error => {
+                    console.error('Error playing alert sound:', error);
+                });
+            }
+            
+            setAlerts(alertData.alerts);
+            previousAlertsLength.current = unreadAlerts.length;
+        }
+    }, [alertData]);
+
+    // Token validation effect
     useEffect(() => {
         if (!token) {
             navigate('/login');
@@ -61,19 +85,10 @@ export default function Dashboard() {
         }
     }, [token, navigate]);
 
-    // Update alerts state when alertData changes
+    // Handle doctor data update
     useEffect(() => {
-        if (alertData) {
-            setAlerts(alertData.alerts);
-        }
-    }, [alertData]);
-
-    // Handle doctor data update and ID setting
-    useEffect(() => {
-        if (doctorData) {
-            if (doctorData.currentDoctor) {
-                setDoctorId(Number(doctorData.currentDoctor.id));
-            }
+        if (doctorData?.currentDoctor) {
+            setDoctorId(Number(doctorData.currentDoctor.id));
         }
 
         if (doctorError) {
@@ -81,12 +96,10 @@ export default function Dashboard() {
         }
     }, [doctorData, doctorError]);
 
-    // Check loading states for alerts and doctor
     if (alertLoading || doctorLoading || loading) {
         return <LoadingSpinner size="large" message="Loading..." />;
     }
 
-    // Handle errors
     if (alertError) {
         return <div>Error Loading Alerts: {alertError.message}</div>;
     }
@@ -95,7 +108,6 @@ export default function Dashboard() {
         return <div>Error fetching doctor details: {error.message}</div>;
     }
 
-    // Handle case where data is undefined
     if (!data) {
         return <div>No doctor data available</div>;
     }
@@ -116,13 +128,10 @@ export default function Dashboard() {
     return (
         <div className="flex h-screen bg-white rounded-3xl">
             <main className="flex-1 p-6">
-                {/* Active Patient Alerts */}
                 <PatientAlert 
-                criticalPatients={criticalPatients}
-                onAlertResolved={handleAlertResolved}
+                    criticalPatients={criticalPatients}
+                    onAlertResolved={handleAlertResolved}
                 />
-
-                {/* Patient Profile Carousel */}
                 <PatientCarousel patientProfiles={patientProfiles} />
             </main>
         </div>
