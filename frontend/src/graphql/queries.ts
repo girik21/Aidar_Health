@@ -67,7 +67,7 @@ export const GET_DOCTOR_PATIENTS = gql`
 `;
 
 export const GET_CRITICAL_ALERTS = gql`
-  query GetCriticalAlerts($doctorId: Int!) {
+  query GetCriticalAlerts {
     alerts {
       id
       message
