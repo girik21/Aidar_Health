@@ -43,3 +43,49 @@ query GetCurrentDoctor($userId: Int!) {
   }
 }
 `;
+
+export const GET_DOCTOR_PATIENTS = gql`
+  query GetDoctorPatients($doctorId: Int!) {
+    doctor(id: $doctorId) {
+      patients {
+        id
+        user {
+          username
+        }
+        medicalHistory
+        healthRecords {
+          heartRate
+          bloodPressureSystolic
+          bloodPressureDiastolic
+          temperature
+          oxygenSaturation
+          timestamp
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CRITICAL_ALERTS = gql`
+  query GetCriticalAlerts {
+    alerts {
+      id
+      message
+      severity
+      isRead
+      timestamp
+      healthRecord {
+        heartRate
+        bloodPressureSystolic
+        bloodPressureDiastolic
+        temperature
+        oxygenSaturation
+        patient {
+          user {
+            username
+          }
+        }
+      }
+    }
+  }
+`;
