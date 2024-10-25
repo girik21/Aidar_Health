@@ -36,7 +36,9 @@ const thresholdSchema = gql`
     extend type Mutation {
         createPatientThreshold(patientThresholdInput: PatientThresholdInput!): PatientThreshold!
         updatePatientThreshold(id: Int!, patientThresholdInput: PatientThresholdInput!): PatientThreshold!
+        deletePatientThreshold(id: Int!): PatientThreshold! # Added delete mutation
     }
+    
 `;
 
 module.exports = thresholdSchema;
