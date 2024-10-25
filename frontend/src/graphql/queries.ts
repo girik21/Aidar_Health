@@ -89,3 +89,31 @@ export const GET_CRITICAL_ALERTS = gql`
     }
   }
 `;
+
+export const ALERT_SUBSCRIPTION = gql`
+subscription OnAlertCreated {
+  alertCreated {
+    id
+    message
+    timestamp
+    severity
+    isRead
+    healthRecord {
+      patient {
+        user {
+          username
+        }
+      }
+    }
+  }
+}
+`;
+
+export const MARK_ALERT_AS_READ = gql`
+mutation MarkAlertAsRead($id: Int!) {
+  markAlertAsRead(id: $id) {
+    id
+    isRead
+  }
+}
+`;
