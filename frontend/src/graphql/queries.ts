@@ -119,26 +119,20 @@ mutation MarkAlertAsRead($id: Int!) {
 `;
 
 export const GET_PATIENT_THRESHOLDS = gql`
-    query GetPatientThresholds {
-        patientThresholds {
-            id
-            metricType
-            minValue
-            maxValue
-            updatedAt
-            notes
-            patient {
-                id
-                user {
-                    username
-                }
-                healthRecords {
-                    id
-                    createdAt
-                    metric
-                    value
-                }
-            }
+  query GetPatientThresholds {
+    patientThresholds {
+      id
+      metricType
+      minValue
+      maxValue
+      updatedAt
+      notes
+      patient {
+        id
+        user {
+          username
         }
+      }
     }
+  }
 `;
