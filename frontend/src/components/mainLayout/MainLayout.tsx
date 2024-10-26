@@ -28,13 +28,12 @@ const MainLayout = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="flex h-screen bg-white rounded-3xl">
-      {/* Sidebar with doctor data */}
+    <div className="flex h-screen overflow-hidden bg-white rounded-3xl">
       <Sidebar doctor={data?.currentDoctor || null} />
-
-      {/* Main content that changes dynamically based on route */}
-      <main className="flex-1">
-        <Outlet />
+      <main className="flex-1 relative">
+        <div className="absolute inset-0 overflow-auto">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

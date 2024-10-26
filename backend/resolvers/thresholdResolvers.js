@@ -17,6 +17,7 @@ const thresholdResolvers = {
     },
 
     Mutation: {
+        // Create a new patient threshold
         createPatientThreshold: async (_, { patientThresholdInput }) => {
             const { patientId, metricType, minValue, maxValue, notes } = patientThresholdInput;
             return await prisma.patientThreshold.create({
@@ -31,6 +32,7 @@ const thresholdResolvers = {
             });
         },
 
+        // Update an existing patient threshold
         updatePatientThreshold: async (_, { id, patientThresholdInput }) => {
             const { metricType, minValue, maxValue, notes } = patientThresholdInput;
             return await prisma.patientThreshold.update({
@@ -42,6 +44,13 @@ const thresholdResolvers = {
                     notes,
                 },
                 include: { patient: true },
+            });
+        },
+
+        // Delete a patient threshold by ID
+        deletePatientThreshold: async (_, { id }) => {
+            return await prisma.patientThreshold.delete({
+                where: { id: parseInt(id) },
             });
         },
     },

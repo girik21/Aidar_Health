@@ -21,10 +21,8 @@ const Sidebar: React.FC<SidebarProps> = ({ doctor }) => {
 
   const menuItems = [
     { name: 'Dashboard', icon: '📊', path: '/dashboard' },
-    { name: 'Patients', icon: '👥', path: '/patients' },
-    { name: 'Alerts', icon: '🔔', path: '/alerts' },
-    { name: 'Records', icon: '✉️', path: '/records' },
     { name: 'Thresholds', icon: '⚙️', path: '/thresholds' },
+    { name: 'Records', icon: '✉️', path: '/records' },
   ];
 
   const handleNavigation = (path: string, name: string) => {

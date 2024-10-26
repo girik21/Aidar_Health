@@ -24,7 +24,7 @@ const healthRecordSchema = gql`
 
     extend type Query {
         healthRecord(id: Int!): HealthRecord
-        healthRecords: [HealthRecord!]!
+        healthRecords(sortOrder: String): [HealthRecord!]!
     }
 
     extend type Mutation {

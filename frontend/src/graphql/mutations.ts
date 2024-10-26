@@ -9,4 +9,19 @@ mutation MarkAlertAsRead($id: Int!) {
 }
 `;
 
-
+export const UPDATE_PATIENT_THRESHOLD = gql`
+  mutation UpdatePatientThreshold($id: Int!, $patientThresholdInput: PatientThresholdInput!) {
+    updatePatientThreshold(id: $id, patientThresholdInput: $patientThresholdInput) {
+      id
+      metricType
+      minValue
+      maxValue
+      notes
+      patient {
+        user {
+          username
+        }
+      }
+    }
+  }
+`;

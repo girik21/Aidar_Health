@@ -117,3 +117,42 @@ mutation MarkAlertAsRead($id: Int!) {
   }
 }
 `;
+
+export const GET_PATIENT_THRESHOLDS = gql`
+  query GetPatientThresholds {
+    patientThresholds {
+      id
+      metricType
+      minValue
+      maxValue
+      updatedAt
+      notes
+      patient {
+        id
+        user {
+          username
+        }
+      }
+    }
+  }
+`;
+
+export const GET_HEALTH_RECORDS = gql`
+  query GetHealthRecords($sortOrder: String!) {
+    healthRecords(sortOrder: $sortOrder) {
+      id
+      patient {
+        id
+        user {
+          username
+        }
+      }
+      heartRate
+      bloodPressureSystolic
+      bloodPressureDiastolic
+      temperature
+      oxygenSaturation
+      timestamp
+    }
+  }
+`;

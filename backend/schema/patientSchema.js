@@ -8,7 +8,7 @@ const patientSchema = gql`
         doctorId: Int!
         user: User!
         doctor: Doctor!
-        healthRecords: [HealthRecord!]!
+        healthRecords: [HealthRecord!]
         thresholds: [PatientThreshold!]!
     }
 
