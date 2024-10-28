@@ -17,3 +17,95 @@
 
    ## Physicians can set up thresholds for the patient that 
    ![Screenshot 2024-10-25 at 5 46 53 PM](https://github.com/user-attachments/assets/5fa05a64-868c-44b0-ad98-9837d47d3939)
+
+  # Technology Stack Summary
+
+## Frontend Stack
+- **React (v18.3.1)**: Modern JavaScript library for building user interfaces with its virtual DOM and component-based architecture.
+
+- **TypeScript (v5.5.3)**: Adds static typing to JavaScript, providing better developer experience and code reliability.
+
+- **Vite (v5.4.8)**: Next-generation frontend build tool offering faster development server and optimized builds.
+
+- **Apollo Client (v3.11.8)**
+  - GraphQL client for React
+  - Handles data fetching, caching, and state management
+  - Integrates with WebSocket for real-time updates
+
+- **TailwindCSS (v3.4.14)**: Utility-first CSS framework for rapid UI development.
+
+- **GraphQL CodeGen**: Automated type generation for GraphQL operations.
+  - `@graphql-codegen/typescript`: TypeScript types generation
+  - `@graphql-codegen/typescript-operations`: Operation-specific types
+  - `@graphql-codegen/typescript-react-apollo`: React hooks generation
+
+## Backend Stack
+- **Node.js**: JavaScript runtime for server-side development.
+
+- **Express (v4.21.1)**: Web framework for Node.js.
+
+- **Prisma (v5.21.1)**
+  - Modern database ORM
+  - Type-safe database access
+  - Database migration tools
+
+- **PostgreSQL**: Robust relational database system.
+
+- **GraphQL (v15.9.0)**
+  - Query language for APIs
+  - Apollo Server for GraphQL implementation
+  - GraphQL subscriptions for real-time features
+
+## Development Tools
+- **ESLint (v9.11.1)**: JavaScript/TypeScript linting tool.
+
+- **nodemon**: Development server with auto-reload capability.
+
+- **bcrypt**: Password hashing library.
+
+- **JWT**: Authentication token management.
+
+## Database Design
+- Normalized schema with clear relationships
+- Role-based access control
+- Real-time health metrics monitoring
+- Alert system with customizable thresholds
+
+## Key Features Implementation
+1. **Authentication**
+   - JWT-based auth flow
+   - Role-based access control
+   - Secure password handling
+
+2. **Real-time Monitoring**
+   - WebSocket connections
+   - GraphQL subscriptions
+   - Live data updates
+
+3. **Data Management**
+   - Type-safe database operations
+   - Efficient data fetching
+   - Optimized caching
+
+4. **Security**
+   - Input validation
+   - Data encryption
+   - Secure session handling
+
+## Development Environment
+- **VSCode** recommended IDE
+- **Git** for version control
+- **npm** for package management
+- Environment variables for configuration
+
+## Testing & Quality
+- TypeScript for type safety
+- ESLint for code quality
+- Prettier for code formatting
+- Development/Production environments
+
+## Architecture Highlights
+- Clean separation of concerns
+- Modular component structure
+- Type-safe data flow
+- Scalable database design
