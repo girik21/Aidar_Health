@@ -3,6 +3,7 @@
 A real-time healthcare monitoring backend system built with Node.js, GraphQL, Express, and Prisma.
 
 ERD for the app:
+![Aidar_ERD](https://github.com/user-attachments/assets/094ab979-ce38-47b2-84a2-ac4837022eeb)
 
 
 ## Features
@@ -188,5 +189,3 @@ ISC
 
 ## Version
 1.0.0
-
-![Uploading Aidar_ERD.svg…]()
