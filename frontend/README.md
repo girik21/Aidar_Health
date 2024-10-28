@@ -10,7 +10,6 @@ A modern, responsive frontend for the Healthcare Monitoring System built with Re
 - **Vite** - Build Tool
 - **TailwindCSS** - Styling
 - **React Router** - Navigation
-- **GraphQL Code Generator** - Type-safe GraphQL operations
 
 ## 📁 Project Structure
 
@@ -55,7 +54,7 @@ frontend/
 
 1. Clone the repository:
 ```bash
-git clone [your-repo-url]
+git clone https://github.com/girik21/Aidar_Health.git
 cd frontend
 ```
 
@@ -68,11 +67,6 @@ npm install
 ```bash
 # Create .env file
 touch .env
-
-# Add required variables
-VITE_API_URL=your_backend_url
-VITE_WS_URL=your_websocket_url
-```
 
 4. Generate GraphQL types:
 ```bash
@@ -175,18 +169,3 @@ The application uses JWT-based authentication with Apollo Client:
 }
 ```
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## 📄 License
-
-This project is licensed under the ISC License.
-
-## 📚 Documentation
-
-For detailed API documentation and component usage, see the `/docs` directory.
